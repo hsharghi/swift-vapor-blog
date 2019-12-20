@@ -19,6 +19,11 @@ final class Post: SQLiteModel {        // 2
         self.title = title
         self.body = body
     }
+    
+    struct UpdatablePost: Content {
+        var title: String?
+        var body: String?
+    }
 
 }
 
