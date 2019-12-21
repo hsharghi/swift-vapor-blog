@@ -30,29 +30,30 @@ final class PostController {
     }
 
     
+    /// Deletes a parameterized `Post`.
+    /// DELETE /posts/:id
+    func delete(_ req: Request) throws -> Future<HTTPStatus> {
+        return try req.parameters.next(Post.self).flatMap { post in     //5
+            return post.delete(on: req)     //6
+        }.transform(to: .noContent)    //7
+    }
+    
+    
     /// Updates an updatable `Post` model to it's new values.
     /// PATCH /posts/:id
     func update(_ req: Request) throws -> Future<Post> {
-        return try req.parameters.next(Post.self).flatMap { post  in    //5
-            let newValues = try req.content.syncDecode(Post.UpdatablePost.self)     //6
+        return try req.parameters.next(Post.self).flatMap { post  in    //8
+            let newPostValues = try req.content.syncDecode(Post.UpdatablePost.self)     //9
             
-            //7
-            post.title = newValues.title ?? post.title
-            post.body = newValues.body ?? post.body
+            //10
+            post.title = newPostValues.title ?? post.title
+            post.body = newPostValues.body ?? post.body
             
-            //8
+            //11
             return post.update(on: req)
         }
     }
 
-    
-    /// Deletes a parameterized `Post`.
-    /// DELETE /posts/:id
-    func delete(_ req: Request) throws -> Future<HTTPStatus> {
-        return try req.parameters.next(Post.self).flatMap { post in     //9
-            return post.delete(on: req)     //10
-        }.transform(to: .noContent)    //11
-    }
 }
 
 
